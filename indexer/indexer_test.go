@@ -25,7 +25,7 @@ import (
 
 	"github.com/coinbase/rosetta-bitcoin/bitcoin"
 	"github.com/coinbase/rosetta-bitcoin/configuration"
-	mocks "github.com/coinbase/rosetta-bitcoin/mocks/indexer"
+	mocks "github.com/coinbase/rosetta-electraprotocol/mocks/indexer"
 
 	"github.com/coinbase/rosetta-sdk-go/types"
 	"github.com/coinbase/rosetta-sdk-go/utils"

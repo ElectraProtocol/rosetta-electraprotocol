@@ -18,8 +18,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/coinbase/rosetta-bitcoin/configuration"
-	mocks "github.com/coinbase/rosetta-bitcoin/mocks/services"
+	"github.com/ElectraProtocol/rosetta-electraprotocol/configuration"
+	mocks "github.com/ElectraProtocol/rosetta-electraprotocol/mocks/services"
 
 	"github.com/coinbase/rosetta-sdk-go/types"
 	"github.com/stretchr/testify/assert"

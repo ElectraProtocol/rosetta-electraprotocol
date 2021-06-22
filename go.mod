@@ -1,4 +1,4 @@
-module github.com/coinbase/rosetta-bitcoin
+module github.com/ElectraProtocol/rosetta-electraprotocol
 
 go 1.13
 

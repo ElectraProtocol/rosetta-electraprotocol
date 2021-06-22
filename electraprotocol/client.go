@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package bitcoin
+package electraprotocol
 
 import (
 	"bytes"
@@ -26,7 +26,7 @@ import (
 	"strconv"
 	"time"
 
-	bitcoinUtils "github.com/coinbase/rosetta-bitcoin/utils"
+	bitcoinUtils "github.com/ElectraProtocol/rosetta-electraprotocol/utils"
 
 	"github.com/btcsuite/btcutil"
 	"github.com/coinbase/rosetta-sdk-go/types"
@@ -35,7 +35,7 @@ import (
 
 const (
 	// genesisBlockIndex is the height of the block we consider to be the
-	// genesis block of the bitcoin blockchain for polling
+	// genesis block of the electraprotocol blockchain for polling
 	genesisBlockIndex = 0
 
 	// requestID is the JSON-RPC request ID we use for making requests.
@@ -92,7 +92,7 @@ const (
 	// returned in Bitcoin blocks to be milliseconds.
 	timeMultiplier = 1000
 
-	// rpc credentials are fixed in rosetta-bitcoin
+	// rpc credentials are fixed in rosetta-electraprotocol
 	// because we never expose access to the raw bitcoind
 	// endpoints (that could be used perform an attack, like
 	// changing our peers).
@@ -240,7 +240,7 @@ func (b *Client) GetRawBlock(
 	return block, coins, nil
 }
 
-// ParseBlock returns a parsed bitcoin block given a raw bitcoin
+// ParseBlock returns a parsed electraprotocol block given a raw electraprotocol
 // block and a map of transactions containing inputs.
 func (b *Client) ParseBlock(
 	ctx context.Context,
@@ -471,7 +471,7 @@ func (b *Client) getHashFromIndex(
 
 // skipTransactionOperations is used to skip operations on transactions that
 // contain duplicate UTXOs (which are no longer possible after BIP-30). This
-// function mirrors the behavior of a similar commit in bitcoin-core.
+// function mirrors the behavior of a similar commit in electraprotocol-core.
 //
 // Source: https://github.com/bitcoin/bitcoin/commit/ab91bf39b7c11e9c86bb2043c24f0f377f1cf514
 func skipTransactionOperations(blockNumber int64, blockHash string, transactionHash string) bool {

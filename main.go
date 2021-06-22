@@ -24,11 +24,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/coinbase/rosetta-bitcoin/bitcoin"
-	"github.com/coinbase/rosetta-bitcoin/configuration"
-	"github.com/coinbase/rosetta-bitcoin/indexer"
-	"github.com/coinbase/rosetta-bitcoin/services"
-	"github.com/coinbase/rosetta-bitcoin/utils"
+	"github.com/ElectraProtocol/rosetta-electraprotocol/bitcoin"
+	"github.com/ElectraProtocol/rosetta-electraprotocol/configuration"
+	"github.com/ElectraProtocol/rosetta-electraprotocol/indexer"
+	"github.com/ElectraProtocol/rosetta-electraprotocol/services"
+	"github.com/ElectraProtocol/rosetta-electraprotocol/utils"
 
 	"github.com/coinbase/rosetta-sdk-go/asserter"
 	"github.com/coinbase/rosetta-sdk-go/server"
@@ -197,10 +197,10 @@ func main() {
 	}
 
 	if signalReceived {
-		logger.Fatalw("rosetta-bitcoin halted")
+		logger.Fatalw("rosetta-electraprotocol halted")
 	}
 
 	if err != nil {
-		logger.Fatalw("rosetta-bitcoin sync failed", "error", err)
+		logger.Fatalw("rosetta-electraprotocol sync failed", "error", err)
 	}
 }

@@ -268,7 +268,7 @@ func (i *Indexer) waitForNode(ctx context.Context) error {
 }
 
 // Sync attempts to index Bitcoin blocks using
-// the bitcoin.Client until stopped.
+// the electraprotocol.Client until stopped.
 func (i *Indexer) Sync(ctx context.Context) error {
 	if err := i.waitForNode(ctx); err != nil {
 		return fmt.Errorf("%w: failed to wait for node", err)
@@ -320,7 +320,7 @@ func (i *Indexer) Prune(ctx context.Context) error {
 				continue
 			}
 
-			// Must meet pruning conditions in bitcoin core
+			// Must meet pruning conditions in electraprotocol core
 			// Source:
 			// https://github.com/bitcoin/bitcoin/blob/a63a26f042134fa80356860c109edb25ac567552/src/rpc/blockchain.cpp#L953-L960
 			pruneHeight := head.Index - i.pruningConfig.Depth

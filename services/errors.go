@@ -104,7 +104,7 @@ var (
 
 	// ErrScriptPubKeysMissing is returned when
 	// the indexer cannot populate the required
-	// bitcoin.ScriptPubKeys to construct a transaction.
+	// electraprotocol.ScriptPubKeys to construct a transaction.
 	ErrScriptPubKeysMissing = &types.Error{
 		Code:    8, //nolint
 		Message: "Missing ScriptPubKeys",
@@ -125,7 +125,7 @@ var (
 	}
 
 	// ErrUnableToDecodeScriptPubKey is returned when a
-	// bitcoin.ScriptPubKey cannot be parsed during construction.
+	// electraprotocol.ScriptPubKey cannot be parsed during construction.
 	ErrUnableToDecodeScriptPubKey = &types.Error{
 		Code:    11, //nolint
 		Message: "Unable to decode ScriptPubKey",

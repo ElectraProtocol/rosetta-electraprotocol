@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package bitcoin
+package electraprotocol
 
 import (
 	"bufio"
@@ -23,14 +23,14 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/coinbase/rosetta-bitcoin/utils"
+	"github.com/ElectraProtocol/rosetta-electraprotocol/utils"
 
 	"golang.org/x/sync/errgroup"
 )
 
 const (
-	bitcoindLogger       = "bitcoind"
-	bitcoindStdErrLogger = "bitcoind stderr"
+	bitcoindLogger       = "xepd"
+	bitcoindStdErrLogger = "xepd stderr"
 )
 
 func logPipe(ctx context.Context, pipe io.ReadCloser, identifier string) error {
@@ -64,9 +64,9 @@ func logPipe(ctx context.Context, pipe io.ReadCloser, identifier string) error {
 // StartBitcoind starts a bitcoind daemon in another goroutine
 // and logs the results to the console.
 func StartBitcoind(ctx context.Context, configPath string, g *errgroup.Group) error {
-	logger := utils.ExtractLogger(ctx, "bitcoind")
+	logger := utils.ExtractLogger(ctx, "xepd")
 	cmd := exec.Command(
-		"/app/bitcoind",
+		"/app/xepd",
 		fmt.Sprintf("--conf=%s", configPath),
 	) // #nosec G204
 

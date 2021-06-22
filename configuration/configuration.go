@@ -22,7 +22,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/coinbase/rosetta-bitcoin/bitcoin"
+	"github.com/ElectraProtocol/rosetta-electraprotocol/electraprotocol"
 
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/coinbase/rosetta-sdk-go/storage/encoder"
@@ -42,27 +42,27 @@ const (
 	// to make outbound connections.
 	Offline Mode = "OFFLINE"
 
-	// Mainnet is the Bitcoin Mainnet.
+	// Mainnet is the ElectraProtocol Mainnet.
 	Mainnet string = "MAINNET"
 
-	// Testnet is Bitcoin Testnet3.
+	// Testnet is ElectraProtocol Testnet.
 	Testnet string = "TESTNET"
 
-	// mainnetConfigPath is the path of the Bitcoin
+	// mainnetConfigPath is the path of the ElectraProtocol
 	// configuration file for mainnet.
-	mainnetConfigPath = "/app/bitcoin-mainnet.conf"
+	mainnetConfigPath = "/app/electraprotocol-mainnet.conf"
 
-	// testnetConfigPath is the path of the Bitcoin
+	// testnetConfigPath is the path of the ElectraProtocol
 	// configuration file for testnet.
-	testnetConfigPath = "/app/bitcoin-testnet.conf"
+	testnetConfigPath = "/app/electraprotocol-testnet.conf"
 
 	// Zstandard compression dictionaries
 	transactionNamespace         = "transaction"
 	testnetTransactionDictionary = "/app/testnet-transaction.zstd"
 	mainnetTransactionDictionary = "/app/mainnet-transaction.zstd"
 
-	mainnetRPCPort = 8332
-	testnetRPCPort = 18332
+	mainnetRPCPort = 16817
+	testnetRPCPort = 18317
 
 	// min prune depth is 288:
 	// https://github.com/bitcoin/bitcoin/blob/ad2952d17a2af419a04256b10b53c7377f826a27/src/validation.h#L84
@@ -79,7 +79,7 @@ const (
 	// persistent data.
 	DataDirectory = "/data"
 
-	bitcoindPath = "bitcoind"
+	bitcoindPath = "xepd"
 	indexerPath  = "indexer"
 
 	// allFilePermissions specifies anyone can do anything

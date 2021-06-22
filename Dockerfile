@@ -12,28 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Build bitcoind
-FROM ubuntu:18.04 as bitcoind-builder
+# Build xepd
+FROM ubuntu:18.04 as xepd-builder
 
 RUN mkdir -p /app \
   && chown -R nobody:nogroup /app
 WORKDIR /app
 
-# Source: https://github.com/bitcoin/bitcoin/blob/master/doc/build-unix.md#ubuntu--debian
+# Source: https://github.com/ElectraProtocol/XEP-Core/blob/master/doc/build-unix.md#ubuntu--debian
 RUN apt-get update && apt-get install -y make gcc g++ autoconf autotools-dev bsdmainutils build-essential git libboost-all-dev \
   libcurl4-openssl-dev libdb++-dev libevent-dev libssl-dev libtool pkg-config python python-pip libzmq3-dev wget
 
-# VERSION: Bitcoin Core 0.20.1
-RUN git clone https://github.com/bitcoin/bitcoin \
-  && cd bitcoin \
+# VERSION: ElectraProtocol Core 0.20.1
+RUN git clone https://github.com/ElectraProtocol/XEP-Core \
+  && cd XEP-Core \
   && git checkout 7ff64311bee570874c4f0dfa18f518552188df08
 
-RUN cd bitcoin \
+RUN cd XEP-Core \
   && ./autogen.sh \
   && ./configure --disable-tests --without-miniupnpc --without-gui --with-incompatible-bdb --disable-hardening --disable-zmq --disable-bench --disable-wallet \
   && make
 
-RUN mv bitcoin/src/bitcoind /app/bitcoind \
+RUN mv XEP-Core/src/xepd /app/xepd \
   && rm -rf bitcoin
 
 # Build Rosetta Server Components
@@ -62,7 +62,7 @@ COPY . src
 RUN cd src \
   && go build \
   && cd .. \
-  && mv src/rosetta-bitcoin /app/rosetta-bitcoin \
+  && mv src/rosetta-electraprotocol /app/rosetta-electraprotocol \
   && mv src/assets/* /app \
   && rm -rf src 
 
@@ -80,8 +80,8 @@ RUN mkdir -p /app \
 
 WORKDIR /app
 
-# Copy binary from bitcoind-builder
-COPY --from=bitcoind-builder /app/bitcoind /app/bitcoind
+# Copy binary from xepd-builder
+COPY --from=xepd-builder /app/xepd /app/xepd
 
 # Copy binary from rosetta-builder
 COPY --from=rosetta-builder /app/* /app/
@@ -89,4 +89,4 @@ COPY --from=rosetta-builder /app/* /app/
 # Set permissions for everything added to /app
 RUN chmod -R 755 /app/*
 
-CMD ["/app/rosetta-bitcoin"]
+CMD ["/app/rosetta-electraprotocol"]

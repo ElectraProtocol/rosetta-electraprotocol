@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package bitcoin
+package electraprotocol
 
 import (
 	"fmt"
@@ -23,8 +23,8 @@ import (
 )
 
 const (
-	// Blockchain is Bitcoin.
-	Blockchain string = "Bitcoin"
+	// Blockchain is ElectraProtocol.
+	Blockchain string = "ElectraProtocol"
 
 	// MainnetNetwork is the value of the network
 	// in MainnetNetworkIdentifier.
@@ -96,7 +96,7 @@ var (
 
 	// MainnetCurrency is the *types.Currency for mainnet.
 	MainnetCurrency = &types.Currency{
-		Symbol:   "BTC",
+		Symbol:   "XEP",
 		Decimals: Decimals,
 	}
 
@@ -110,7 +110,7 @@ var (
 
 	// TestnetCurrency is the *types.Currency for testnet.
 	TestnetCurrency = &types.Currency{
-		Symbol:   "tBTC",
+		Symbol:   "tXEP",
 		Decimals: Decimals,
 	}
 
@@ -499,7 +499,7 @@ func (r rawMempoolResponse) Err() error {
 
 // CoinIdentifier converts a tx hash and vout into
 // the canonical CoinIdentifier.Identifier used in
-// rosetta-bitcoin.
+// rosetta-electraprotocol.
 func CoinIdentifier(hash string, vout int64) string {
 	return fmt.Sprintf("%s:%d", hash, vout)
 }
