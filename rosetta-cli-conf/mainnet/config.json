@@ -1,6 +1,6 @@
 {
   "network": {
-    "blockchain": "ElectraProject",
+    "blockchain": "ElectraProtocol",
     "network": "Mainnet"
   },
   "data_directory": "cli-data",

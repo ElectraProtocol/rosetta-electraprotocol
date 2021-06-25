@@ -25,7 +25,7 @@ import (
 const (
 	// NodeVersion is the version of
 	// electraprotocol core we are using.
-	NodeVersion = "0.20.1"
+	NodeVersion = "1.0.2"
 
 	// HistoricalBalanceLookup indicates
 	// that historical balance lookup is supported.
@@ -75,7 +75,7 @@ type Indexer interface {
 	GetScriptPubKeys(
 		context.Context,
 		[]*types.Coin,
-	) ([]*bitcoin.ScriptPubKey, error)
+	) ([]*electraprotocol.ScriptPubKey, error)
 	GetBalance(
 		context.Context,
 		*types.AccountIdentifier,
@@ -85,10 +85,10 @@ type Indexer interface {
 }
 
 type unsignedTransaction struct {
-	Transaction    string                  `json:"transaction"`
-	ScriptPubKeys  []*bitcoin.ScriptPubKey `json:"scriptPubKeys"`
-	InputAmounts   []string                `json:"input_amounts"`
-	InputAddresses []string                `json:"input_addresses"`
+	Transaction    string                          `json:"transaction"`
+	ScriptPubKeys  []*electraprotocol.ScriptPubKey `json:"scriptPubKeys"`
+	InputAmounts   []string                        `json:"input_amounts"`
+	InputAddresses []string                        `json:"input_addresses"`
 }
 
 type preprocessOptions struct {
@@ -98,7 +98,7 @@ type preprocessOptions struct {
 }
 
 type constructionMetadata struct {
-	ScriptPubKeys []*bitcoin.ScriptPubKey `json:"script_pub_keys"`
+	ScriptPubKeys []*electraprotocol.ScriptPubKey `json:"script_pub_keys"`
 }
 
 type signedTransaction struct {
@@ -109,5 +109,5 @@ type signedTransaction struct {
 // ParseOperationMetadata is returned from
 // ConstructionParse.
 type ParseOperationMetadata struct {
-	ScriptPubKey *bitcoin.ScriptPubKey `json:"scriptPubKey"`
+	ScriptPubKey *electraprotocol.ScriptPubKey `json:"scriptPubKey"`
 }

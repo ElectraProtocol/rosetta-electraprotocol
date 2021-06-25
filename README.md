@@ -7,10 +7,10 @@
    Rosetta ElectraProtocol
 </h3>
 <p align="center">
-  <a href="https://circleci.com/gh/Electraprotocol/rosetta-electraprotocol/tree/master"><img src="https://circleci.com/gh/coinbase/rosetta-bitcoin/tree/master.svg?style=shield" /></a>
-  <a href="https://coveralls.io/github/Electraprotocol/rosetta-electraprotocol"><img src="https://coveralls.io/repos/github/coinbase/rosetta-bitcoin/badge.svg" /></a>
-  <a href="https://goreportcard.com/report/github.com/Electraprotocol/rosetta-electraprotocol"><img src="https://goreportcard.com/badge/github.com/coinbase/rosetta-bitcoin" /></a>
-  <a href="https://github.com/Electraprotocol/rosetta-electraprotocol/blob/master/LICENSE.txt"><img src="https://img.shields.io/github/license/coinbase/rosetta-bitcoin.svg" /></a>
+  <a href="https://circleci.com/gh/Electraprotocol/rosetta-electraprotocol/tree/master"><img src="https://circleci.com/gh/coinbase/rosetta-electraprotocol/tree/master.svg?style=shield" /></a>
+  <a href="https://coveralls.io/github/Electraprotocol/rosetta-electraprotocol"><img src="https://coveralls.io/repos/github/coinbase/rosetta-electraprotocol/badge.svg" /></a>
+  <a href="https://goreportcard.com/report/github.com/Electraprotocol/rosetta-electraprotocol"><img src="https://goreportcard.com/badge/github.com/coinbase/rosetta-electraprotocol" /></a>
+  <a href="https://github.com/Electraprotocol/rosetta-electraprotocol/blob/master/LICENSE.txt"><img src="https://img.shields.io/github/license/coinbase/rosetta-electraprotocol.svg" /></a>
   <a href="https://pkg.go.dev/github.com/Electraprotocol/rosetta-electraprotocol?tab=overview"><img src="https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=shield" /></a>
 </p>
 
@@ -38,12 +38,12 @@ all Rosetta implementations must be deployable via Docker and support running vi
 DOCKER [HERE](https://www.docker.com/get-started).**
 
 ### Install
-Running the following commands will create a Docker image called `rosetta-bitcoin:latest`.
+Running the following commands will create a Docker image called `rosetta-electraprotocol:latest`.
 
 #### From GitHub
 To download the pre-built Docker image from the latest release, run:
 ```text
-curl -sSfL https://raw.githubusercontent.com/ElectraProtocol/rosetta-electraprotocol/master/install.sh | sh -s
+curl -sSfL https://raw.githubusercontent.com/coinbase/rosetta-electraprotocol/master/install.sh | sh -s
 ```
 _Do not try to install rosetta-electraprotocol using GitHub Packages!_
 
@@ -61,7 +61,7 @@ at port `8080`.
 
 #### Mainnet:Online
 ```text
-docker run -d --rm --ulimit "nofile=100000:100000" -v "$(pwd)/electraprotocol-data:/data" -e "MODE=ONLINE" -e "NETWORK=MAINNET" -e "PORT=8080" -p 8080:8080 -p 16816:16816 rosetta-electraprotocol:latest
+docker run -d --rm --ulimit "nofile=100000:100000" -v "$(pwd)/electraprotocol-data:/data" -e "MODE=ONLINE" -e "NETWORK=MAINNET" -e "PORT=8080" -p 8080:8080 -p 16817:16817 rosetta-electraprotocol:latest
 ```
 _If you cloned the repository, you can run `make run-mainnet-online`._
 
@@ -73,7 +73,7 @@ _If you cloned the repository, you can run `make run-mainnet-offline`._
 
 #### Testnet:Online
 ```text
-docker run -d --rm --ulimit "nofile=100000:100000" -v "$(pwd)/electraprotocol-data:/data" -e "MODE=ONLINE" -e "NETWORK=TESTNET" -e "PORT=8080" -p 8080:8080 -p 116816:116816 rosetta-electraprotocol:latest
+docker run -d --rm --ulimit "nofile=100000:100000" -v "$(pwd)/electraprotocol-data:/data" -e "MODE=ONLINE" -e "NETWORK=TESTNET" -e "PORT=8080" -p 8080:8080 -p 18317:18317 rosetta-electraprotocol:latest
 ```
 _If you cloned the repository, you can run `make run-testnet-online`._
 
@@ -88,7 +88,7 @@ _If you cloned the repository, you can run `make run-testnet-offline`._
 This instance type has 8 vCPU and 16 GB of RAM.
 
 ### Network Settings
-To increase the load `rosetta-bitcoin` can handle, it is recommended to tune your OS
+To increase the load `rosetta-electraprotocol` can handle, it is recommended to tune your OS
 settings to allow for more connections. On a linux-based OS, you can run the following
 commands ([source](http://www.tweaked.io/guide/kernel)):
 ```text
@@ -99,7 +99,7 @@ sysctl -w net.ipv4.tcp_max_syn_backlog=10000
 sysctl -w net.core.somaxconn=10000
 sysctl -p (when done)
 ```
-_We have not tested `rosetta-bitcoin` with `net.ipv4.tcp_tw_recycle` and do not recommend
+_We have not tested `rosetta-electraprotocol` with `net.ipv4.tcp_tw_recycle` and do not recommend
 enabling it._
 
 You should also modify your open file settings to `100000`. This can be done on a linux-based OS
@@ -116,7 +116,7 @@ on your OS. There is a great tutorial for how to do this on Linux [here](https:/
 ## Architecture
 `rosetta-electraprotocol` uses the `syncer`, `storage`, `parser`, and `server` package
 from [`rosetta-sdk-go`](https://github.com/coinbase/rosetta-sdk-go) instead
-of a new Bitcoin-specific implementation of packages of similar functionality. Below
+of a new ElectraProtocol-specific implementation of packages of similar functionality. Below
 you can find a high-level overview of how everything fits together:
 ```text
                                +------------------------------------------------------------------+

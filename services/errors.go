@@ -25,7 +25,7 @@ var (
 		ErrUnimplemented,
 		ErrUnavailableOffline,
 		ErrNotReady,
-		ErrBitcoind,
+		ErrXepd,
 		ErrBlockNotFound,
 		ErrUnableToDerive,
 		ErrUnclearIntent,
@@ -65,11 +65,11 @@ var (
 		Retriable: true,
 	}
 
-	// ErrBitcoind is returned when bitcoind
+	// ErrXepd is returned when bitcoind
 	// errors on a request.
-	ErrBitcoind = &types.Error{
+	ErrXepd = &types.Error{
 		Code:    3, //nolint
-		Message: "Bitcoind error",
+		Message: "Xepd error",
 	}
 
 	// ErrBlockNotFound is returned when a block

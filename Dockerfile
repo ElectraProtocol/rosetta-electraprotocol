@@ -20,21 +20,26 @@ RUN mkdir -p /app \
 WORKDIR /app
 
 # Source: https://github.com/ElectraProtocol/XEP-Core/blob/master/doc/build-unix.md#ubuntu--debian
-RUN apt-get update && apt-get install -y make gcc g++ autoconf autotools-dev bsdmainutils build-essential git libboost-all-dev \
-  libcurl4-openssl-dev libdb++-dev libevent-dev libssl-dev libtool pkg-config python python-pip libzmq3-dev wget
+RUN apt-get update && apt-get install -y automake make gcc g++ autoconf autotools-dev libsqlite3-dev bsdmainutils build-essential git libboost-all-dev \
+  libcurl4-openssl-dev libdb++-dev libevent-dev libssl-dev libtool pkg-config python3 python-pip libzmq3-dev wget curl
 
-# VERSION: ElectraProtocol Core 0.20.1
+
+
+# VERSION: ElectraProtocol Core v1.0.2.0
 RUN git clone https://github.com/ElectraProtocol/XEP-Core \
   && cd XEP-Core \
-  && git checkout 7ff64311bee570874c4f0dfa18f518552188df08
+  && git checkout 96529bb6c289355f85064bddfeeccf1bd545495a
 
 RUN cd XEP-Core \
+  && cd `pwd`/depends \
+  && make -j4 \
+  && cd .. \
   && ./autogen.sh \
-  && ./configure --disable-tests --without-miniupnpc --without-gui --with-incompatible-bdb --disable-hardening --disable-zmq --disable-bench --disable-wallet \
-  && make
+  && ./configure --prefix=`pwd`/depends/x86_64-pc-linux-gnu --disable-tests --without-miniupnpc --without-gui --with-incompatible-bdb --disable-hardening --disable-zmq --disable-bench --disable-wallet CXXFLAGS="--param ggc-min-expand=1 --param ggc-min-heapsize=32768" \
+  && make -j4
 
 RUN mv XEP-Core/src/xepd /app/xepd \
-  && rm -rf bitcoin
+  && rm -rf XEP-Core
 
 # Build Rosetta Server Components
 FROM ubuntu:18.04 as rosetta-builder
@@ -58,13 +63,13 @@ ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 
 # Use native remote build context to build in any directory
-COPY . src 
+COPY . src
 RUN cd src \
   && go build \
   && cd .. \
   && mv src/rosetta-electraprotocol /app/rosetta-electraprotocol \
   && mv src/assets/* /app \
-  && rm -rf src 
+  && rm -rf src
 
 ## Build Final Image
 FROM ubuntu:18.04

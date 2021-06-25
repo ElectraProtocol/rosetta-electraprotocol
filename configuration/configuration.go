@@ -64,13 +64,13 @@ const (
 	mainnetRPCPort = 16817
 	testnetRPCPort = 18317
 
-	// min prune depth is 288:
-	// https://github.com/bitcoin/bitcoin/blob/ad2952d17a2af419a04256b10b53c7377f826a27/src/validation.h#L84
+	// min prune depth is 2160:
+	// https://github.com/ElectraProtocol/XEP-Core/blob/098b0a1e43f57cbc54c8efa558567152bef5c9f5/src/validation.h#L84
 	pruneDepth = int64(10000) //nolint
 
 	// min prune height (on mainnet):
-	// https://github.com/bitcoin/bitcoin/blob/62d137ac3b701aae36c1aa3aa93a83fd6357fde6/src/chainparams.cpp#L102
-	minPruneHeight = int64(100000) //nolint
+	// https://github.com/ElectraProtocol/XEP-Core/blob/0cdc55c1d34d351014caf95d6448c4d8c6f7043a/src/chainparams.cpp#146
+	minPruneHeight = int64(1000) //nolint
 
 	// attempt to prune once an hour
 	pruneFrequency = 60 * time.Minute
@@ -79,8 +79,8 @@ const (
 	// persistent data.
 	DataDirectory = "/data"
 
-	bitcoindPath = "xepd"
-	indexerPath  = "indexer"
+	xepdPath    = "xepd"
+	indexerPath = "indexer"
 
 	// allFilePermissions specifies anyone can do anything
 	// to the file.
@@ -120,7 +120,7 @@ type Configuration struct {
 	ConfigPath             string
 	Pruning                *PruningConfiguration
 	IndexerPath            string
-	BitcoindPath           string
+	XepdPath               string
 	Compressors            []*encoder.CompressorEntry
 }
 
@@ -143,9 +143,9 @@ func LoadConfiguration(baseDirectory string) (*Configuration, error) {
 			return nil, fmt.Errorf("%w: unable to create indexer path", err)
 		}
 
-		config.BitcoindPath = path.Join(baseDirectory, bitcoindPath)
-		if err := ensurePathExists(config.BitcoindPath); err != nil {
-			return nil, fmt.Errorf("%w: unable to create bitcoind path", err)
+		config.XepdPath = path.Join(baseDirectory, xepdPath)
+		if err := ensurePathExists(config.XepdPath); err != nil {
+			return nil, fmt.Errorf("%w: unable to create xepd path", err)
 		}
 	case Offline:
 		config.Mode = Offline
@@ -159,12 +159,12 @@ func LoadConfiguration(baseDirectory string) (*Configuration, error) {
 	switch networkValue {
 	case Mainnet:
 		config.Network = &types.NetworkIdentifier{
-			Blockchain: bitcoin.Blockchain,
-			Network:    bitcoin.MainnetNetwork,
+			Blockchain: electraprotocol.Blockchain,
+			Network:    electraprotocol.MainnetNetwork,
 		}
-		config.GenesisBlockIdentifier = bitcoin.MainnetGenesisBlockIdentifier
-		config.Params = bitcoin.MainnetParams
-		config.Currency = bitcoin.MainnetCurrency
+		config.GenesisBlockIdentifier = electraprotocol.MainnetGenesisBlockIdentifier
+		config.Params = electraprotocol.MainnetParams
+		config.Currency = electraprotocol.MainnetCurrency
 		config.ConfigPath = mainnetConfigPath
 		config.RPCPort = mainnetRPCPort
 		config.Compressors = []*encoder.CompressorEntry{
@@ -175,12 +175,12 @@ func LoadConfiguration(baseDirectory string) (*Configuration, error) {
 		}
 	case Testnet:
 		config.Network = &types.NetworkIdentifier{
-			Blockchain: bitcoin.Blockchain,
-			Network:    bitcoin.TestnetNetwork,
+			Blockchain: electraprotocol.Blockchain,
+			Network:    electraprotocol.TestnetNetwork,
 		}
-		config.GenesisBlockIdentifier = bitcoin.TestnetGenesisBlockIdentifier
-		config.Params = bitcoin.TestnetParams
-		config.Currency = bitcoin.TestnetCurrency
+		config.GenesisBlockIdentifier = electraprotocol.TestnetGenesisBlockIdentifier
+		config.Params = electraprotocol.TestnetParams
+		config.Currency = electraprotocol.TestnetCurrency
 		config.ConfigPath = testnetConfigPath
 		config.RPCPort = testnetRPCPort
 		config.Compressors = []*encoder.CompressorEntry{

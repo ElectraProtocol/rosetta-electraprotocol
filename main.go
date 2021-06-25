@@ -24,8 +24,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/ElectraProtocol/rosetta-electraprotocol/bitcoin"
 	"github.com/ElectraProtocol/rosetta-electraprotocol/configuration"
+	"github.com/ElectraProtocol/rosetta-electraprotocol/electraprotocol"
 	"github.com/ElectraProtocol/rosetta-electraprotocol/indexer"
 	"github.com/ElectraProtocol/rosetta-electraprotocol/services"
 	"github.com/ElectraProtocol/rosetta-electraprotocol/utils"
@@ -79,15 +79,15 @@ func startOnlineDependencies(
 	cancel context.CancelFunc,
 	cfg *configuration.Configuration,
 	g *errgroup.Group,
-) (*bitcoin.Client, *indexer.Indexer, error) {
-	client := bitcoin.NewClient(
-		bitcoin.LocalhostURL(cfg.RPCPort),
+) (*electraprotocol.Client, *indexer.Indexer, error) {
+	client := electraprotocol.NewClient(
+		electraprotocol.LocalhostURL(cfg.RPCPort),
 		cfg.GenesisBlockIdentifier,
 		cfg.Currency,
 	)
 
 	g.Go(func() error {
-		return bitcoin.StartBitcoind(ctx, cfg.ConfigPath, g)
+		return electraprotocol.StartBitcoind(ctx, cfg.ConfigPath, g)
 	})
 
 	i, err := indexer.Initialize(
@@ -142,7 +142,7 @@ func main() {
 	})
 
 	var i *indexer.Indexer
-	var client *bitcoin.Client
+	var client *electraprotocol.Client
 	if cfg.Mode == configuration.Online {
 		client, i, err = startOnlineDependencies(ctx, cancel, cfg, g)
 		if err != nil {
@@ -153,7 +153,7 @@ func main() {
 	// The asserter automatically rejects incorrectly formatted
 	// requests.
 	asserter, err := asserter.NewServer(
-		bitcoin.OperationTypes,
+		electraprotocol.OperationTypes,
 		services.HistoricalBalanceLookup,
 		[]*types.NetworkIdentifier{cfg.Network},
 		nil,
