@@ -33,16 +33,16 @@ const (
 )
 
 func forceMarshalMap(t *testing.T, i interface{}) map[string]interface{} {
-	m, err := types.MarshalMap(i)
+	m, err := MarshalMap(i)
 	if err != nil {
-		t.Fatalf("could not marshal map %s", types.PrintStruct(i))
+		t.Fatalf("could not marshal map %s", PrintStruct(i))
 	}
 
 	return m
 }
 
 var (
-	blockIdentifier1000 = &types.BlockIdentifier{
+	blockIdentifier1000 = &BlockIdentifier{
 		Hash:  "00000000c937983704a73af28acdec37b049d214adbda81d7e2a3dd146f6ed09",
 		Index: 1000,
 	}
@@ -124,7 +124,7 @@ var (
 		},
 	}
 
-	blockIdentifier100000 = &types.BlockIdentifier{
+	blockIdentifier100000 = &BlockIdentifier{
 		Hash:  "000000000003ba27aa200b1cecaad478d2b00432346c3f1f3986da1afd33e506",
 		Index: 100000,
 	}
@@ -296,7 +296,7 @@ func TestNetworkStatus(t *testing.T) {
 	tests := map[string]struct {
 		responses []responseFixture
 
-		expectedStatus *types.NetworkStatusResponse
+		expectedStatus *NetworkStatusResponse
 		expectedError  error
 	}{
 		"successful": {
@@ -317,11 +317,11 @@ func TestNetworkStatus(t *testing.T) {
 					url:    url,
 				},
 			},
-			expectedStatus: &types.NetworkStatusResponse{
+			expectedStatus: &NetworkStatusResponse{
 				CurrentBlockIdentifier: blockIdentifier1000,
 				CurrentBlockTimestamp:  block1000.Time * 1000,
 				GenesisBlockIdentifier: MainnetGenesisBlockIdentifier,
-				Peers: []*types.Peer{
+				Peers: []*Peer{
 					{
 						PeerID: "77.93.223.9:8333",
 						Metadata: forceMarshalMap(t, &PeerInfo{
@@ -434,7 +434,7 @@ func TestGetPeers(t *testing.T) {
 	tests := map[string]struct {
 		responses []responseFixture
 
-		expectedPeers []*types.Peer
+		expectedPeers []*Peer
 		expectedError error
 	}{
 		"successful": {
@@ -445,7 +445,7 @@ func TestGetPeers(t *testing.T) {
 					url:    url,
 				},
 			},
-			expectedPeers: []*types.Peer{
+			expectedPeers: []*Peer{
 				{
 					PeerID: "77.93.223.9:8333",
 					Metadata: forceMarshalMap(t, &PeerInfo{
@@ -535,7 +535,7 @@ func TestGetPeers(t *testing.T) {
 
 func TestGetRawBlock(t *testing.T) {
 	tests := map[string]struct {
-		blockIdentifier *types.PartialBlockIdentifier
+		blockIdentifier *PartialBlockIdentifier
 		responses       []responseFixture
 
 		expectedBlock *Block
@@ -543,7 +543,7 @@ func TestGetRawBlock(t *testing.T) {
 		expectedError error
 	}{
 		"lookup by hash": {
-			blockIdentifier: &types.PartialBlockIdentifier{
+			blockIdentifier: &PartialBlockIdentifier{
 				Hash: &blockIdentifier1000.Hash,
 			},
 			responses: []responseFixture{
@@ -557,7 +557,7 @@ func TestGetRawBlock(t *testing.T) {
 			expectedCoins: []string{},
 		},
 		"lookup by hash 2": {
-			blockIdentifier: &types.PartialBlockIdentifier{
+			blockIdentifier: &PartialBlockIdentifier{
 				Hash: &blockIdentifier100000.Hash,
 			},
 			responses: []responseFixture{
@@ -575,7 +575,7 @@ func TestGetRawBlock(t *testing.T) {
 			},
 		},
 		"lookup by hash (get block api error)": {
-			blockIdentifier: &types.PartialBlockIdentifier{
+			blockIdentifier: &PartialBlockIdentifier{
 				Hash: &blockIdentifier1000.Hash,
 			},
 			responses: []responseFixture{
@@ -588,7 +588,7 @@ func TestGetRawBlock(t *testing.T) {
 			expectedError: ErrBlockNotFound,
 		},
 		"lookup by hash (get block internal error)": {
-			blockIdentifier: &types.PartialBlockIdentifier{
+			blockIdentifier: &PartialBlockIdentifier{
 				Hash: &blockIdentifier1000.Hash,
 			},
 			responses: []responseFixture{
@@ -602,7 +602,7 @@ func TestGetRawBlock(t *testing.T) {
 			expectedError: errors.New("invalid response: 500 Internal Server Error"),
 		},
 		"lookup by index": {
-			blockIdentifier: &types.PartialBlockIdentifier{
+			blockIdentifier: &PartialBlockIdentifier{
 				Index: &blockIdentifier1000.Index,
 			},
 			responses: []responseFixture{
@@ -621,7 +621,7 @@ func TestGetRawBlock(t *testing.T) {
 			expectedCoins: []string{},
 		},
 		"lookup by index (out of range)": {
-			blockIdentifier: &types.PartialBlockIdentifier{
+			blockIdentifier: &PartialBlockIdentifier{
 				Index: &blockIdentifier1000.Index,
 			},
 			responses: []responseFixture{
@@ -700,63 +700,63 @@ func int64Pointer(v int64) *int64 {
 }
 
 func mustMarshalMap(v interface{}) map[string]interface{} {
-	m, _ := types.MarshalMap(v)
+	m, _ := MarshalMap(v)
 	return m
 }
 
 func TestParseBlock(t *testing.T) {
 	tests := map[string]struct {
 		block *Block
-		coins map[string]*types.AccountCoin
+		coins map[string]*AccountCoin
 
-		expectedBlock *types.Block
+		expectedBlock *Block
 		expectedError error
 	}{
 		"no fetched transactions": {
 			block: block1000,
-			coins: map[string]*types.AccountCoin{},
-			expectedBlock: &types.Block{
+			coins: map[string]*AccountCoin{},
+			expectedBlock: &Block{
 				BlockIdentifier: blockIdentifier1000,
-				ParentBlockIdentifier: &types.BlockIdentifier{
+				ParentBlockIdentifier: &BlockIdentifier{
 					Hash:  "0000000008e647742775a230787d66fdf92c46a48c896bfbc85cdc8acc67e87d",
 					Index: 999,
 				},
 				Timestamp: 1232346882000,
-				Transactions: []*types.Transaction{
+				Transactions: []*Transaction{
 					{
-						TransactionIdentifier: &types.TransactionIdentifier{
+						TransactionIdentifier: &TransactionIdentifier{
 							Hash: "fe28050b93faea61fa88c4c630f0e1f0a1c24d0082dd0e10d369e13212128f33",
 						},
-						Operations: []*types.Operation{
+						Operations: []*Operation{
 							{
-								OperationIdentifier: &types.OperationIdentifier{
+								OperationIdentifier: &OperationIdentifier{
 									Index:        0,
 									NetworkIndex: int64Pointer(0),
 								},
 								Type:   CoinbaseOpType,
-								Status: types.String(SuccessStatus),
+								Status: String(SuccessStatus),
 								Metadata: mustMarshalMap(&OperationMetadata{
 									Coinbase: "04ffff001d02fd04",
 									Sequence: 4294967295,
 								}),
 							},
 							{
-								OperationIdentifier: &types.OperationIdentifier{
+								OperationIdentifier: &OperationIdentifier{
 									Index:        1,
 									NetworkIndex: int64Pointer(0),
 								},
 								Type:   OutputOpType,
-								Status: types.String(SuccessStatus),
-								Account: &types.AccountIdentifier{
+								Status: String(SuccessStatus),
+								Account: &AccountIdentifier{
 									Address: "4104f5eeb2b10c944c6b9fbcfff94c35bdeecd93df977882babc7f3a2cf7f5c81d3b09a68db7f0e04f21de5d4230e75e6dbe7ad16eefe0d4325a62067dc6f369446aac", // nolint
 								},
-								Amount: &types.Amount{
+								Amount: &Amount{
 									Value:    "5000000000",
 									Currency: MainnetCurrency,
 								},
-								CoinChange: &types.CoinChange{
-									CoinAction: types.CoinCreated,
-									CoinIdentifier: &types.CoinIdentifier{
+								CoinChange: &CoinChange{
+									CoinAction: CoinCreated,
+									CoinIdentifier: &CoinIdentifier{
 										Identifier: "fe28050b93faea61fa88c4c630f0e1f0a1c24d0082dd0e10d369e13212128f33:0",
 									},
 								},
@@ -777,27 +777,27 @@ func TestParseBlock(t *testing.T) {
 						}),
 					},
 					{
-						TransactionIdentifier: &types.TransactionIdentifier{
+						TransactionIdentifier: &TransactionIdentifier{
 							Hash: "4852fe372ff7534c16713b3146bbc1e86379c70bea4d5c02fb1fa0112980a081",
 						},
-						Operations: []*types.Operation{
+						Operations: []*Operation{
 							{
-								OperationIdentifier: &types.OperationIdentifier{
+								OperationIdentifier: &OperationIdentifier{
 									Index:        0,
 									NetworkIndex: int64Pointer(0),
 								},
 								Type:   OutputOpType,
-								Status: types.String(SuccessStatus),
-								Account: &types.AccountIdentifier{
+								Status: String(SuccessStatus),
+								Account: &AccountIdentifier{
 									Address: "mmtKKnjqTPdkBnBMbNt5Yu2SCwpMaEshEL", // nolint
 								},
-								Amount: &types.Amount{
+								Amount: &Amount{
 									Value:    "3810000",
 									Currency: MainnetCurrency,
 								},
-								CoinChange: &types.CoinChange{
-									CoinAction: types.CoinCreated,
-									CoinIdentifier: &types.CoinIdentifier{
+								CoinChange: &CoinChange{
+									CoinAction: CoinCreated,
+									CoinIdentifier: &CoinIdentifier{
 										Identifier: "4852fe372ff7534c16713b3146bbc1e86379c70bea4d5c02fb1fa0112980a081:0",
 									},
 								},
@@ -814,22 +814,22 @@ func TestParseBlock(t *testing.T) {
 								}),
 							},
 							{
-								OperationIdentifier: &types.OperationIdentifier{
+								OperationIdentifier: &OperationIdentifier{
 									Index:        1,
 									NetworkIndex: int64Pointer(1),
 								},
 								Type:   OutputOpType,
-								Status: types.String(SuccessStatus),
-								Account: &types.AccountIdentifier{
+								Status: String(SuccessStatus),
+								Account: &AccountIdentifier{
 									Address: "4852fe372ff7534c16713b3146bbc1e86379c70bea4d5c02fb1fa0112980a081:1",
 								},
-								Amount: &types.Amount{
+								Amount: &Amount{
 									Value:    "50000000",
 									Currency: MainnetCurrency,
 								},
-								CoinChange: &types.CoinChange{
-									CoinAction: types.CoinCreated,
-									CoinIdentifier: &types.CoinIdentifier{
+								CoinChange: &CoinChange{
+									CoinAction: CoinCreated,
+									CoinIdentifier: &CoinIdentifier{
 										Identifier: "4852fe372ff7534c16713b3146bbc1e86379c70bea4d5c02fb1fa0112980a081:1",
 									},
 								},
@@ -864,92 +864,92 @@ func TestParseBlock(t *testing.T) {
 		},
 		"block 100000": {
 			block: block100000,
-			coins: map[string]*types.AccountCoin{
+			coins: map[string]*AccountCoin{
 				"87a157f3fd88ac7907c05fc55e271dc4acdc5605d187d646604ca8c0e9382e03:0": {
-					Account: &types.AccountIdentifier{
+					Account: &AccountIdentifier{
 						Address: "1BNwxHGaFbeUBitpjy2AsKpJ29Ybxntqvb",
 					},
-					Coin: &types.Coin{
-						CoinIdentifier: &types.CoinIdentifier{
+					Coin: &Coin{
+						CoinIdentifier: &CoinIdentifier{
 							Identifier: "87a157f3fd88ac7907c05fc55e271dc4acdc5605d187d646604ca8c0e9382e03:0",
 						},
-						Amount: &types.Amount{
+						Amount: &Amount{
 							Value:    "5000000000",
 							Currency: MainnetCurrency,
 						},
 					},
 				},
 				"503e4e9824282eb06f1a328484e2b367b5f4f93a405d6e7b97261bafabfb53d5:0": {
-					Account: &types.AccountIdentifier{
+					Account: &AccountIdentifier{
 						Address: "3FfQGY7jqsADC7uTVqF3vKQzeNPiBPTqt4",
 					},
-					Coin: &types.Coin{
-						CoinIdentifier: &types.CoinIdentifier{
+					Coin: &Coin{
+						CoinIdentifier: &CoinIdentifier{
 							Identifier: "503e4e9824282eb06f1a328484e2b367b5f4f93a405d6e7b97261bafabfb53d5:0",
 						},
-						Amount: &types.Amount{
+						Amount: &Amount{
 							Value:    "3467607",
 							Currency: MainnetCurrency,
 						},
 					},
 				},
 				"503e4e9824282eb06f1a328484e2b367b5f4f93a405d6e7b97261bafabfb53d5:1": {
-					Account: &types.AccountIdentifier{
+					Account: &AccountIdentifier{
 						Address: "1NdvAyRJLdK5EXs7DV3ebYb5wffdCZk1pD",
 					},
-					Coin: &types.Coin{
-						CoinIdentifier: &types.CoinIdentifier{
+					Coin: &Coin{
+						CoinIdentifier: &CoinIdentifier{
 							Identifier: "503e4e9824282eb06f1a328484e2b367b5f4f93a405d6e7b97261bafabfb53d5:1",
 						},
-						Amount: &types.Amount{
+						Amount: &Amount{
 							Value:    "0",
 							Currency: MainnetCurrency,
 						},
 					},
 				},
 			},
-			expectedBlock: &types.Block{
+			expectedBlock: &Block{
 				BlockIdentifier: blockIdentifier100000,
-				ParentBlockIdentifier: &types.BlockIdentifier{
+				ParentBlockIdentifier: &BlockIdentifier{
 					Hash:  "000000000002d01c1fccc21636b607dfd930d31d01c3a62104612a1719011250",
 					Index: 99999,
 				},
 				Timestamp: 1293623863000,
-				Transactions: []*types.Transaction{
+				Transactions: []*Transaction{
 					{
-						TransactionIdentifier: &types.TransactionIdentifier{
+						TransactionIdentifier: &TransactionIdentifier{
 							Hash: "8c14f0db3df150123e6f3dbbf30f8b955a8249b62ac1d1ff16284aefa3d06d87",
 						},
-						Operations: []*types.Operation{
+						Operations: []*Operation{
 							{
-								OperationIdentifier: &types.OperationIdentifier{
+								OperationIdentifier: &OperationIdentifier{
 									Index:        0,
 									NetworkIndex: int64Pointer(0),
 								},
 								Type:   CoinbaseOpType,
-								Status: types.String(SuccessStatus),
+								Status: String(SuccessStatus),
 								Metadata: mustMarshalMap(&OperationMetadata{
 									Coinbase: "044c86041b020602",
 									Sequence: 4294967295,
 								}),
 							},
 							{
-								OperationIdentifier: &types.OperationIdentifier{
+								OperationIdentifier: &OperationIdentifier{
 									Index:        1,
 									NetworkIndex: int64Pointer(0),
 								},
 								Type:   OutputOpType,
-								Status: types.String(SuccessStatus),
-								Account: &types.AccountIdentifier{
+								Status: String(SuccessStatus),
+								Account: &AccountIdentifier{
 									Address: "34qkc2iac6RsyxZVfyE2S5U5WcRsbg2dpK",
 								},
-								Amount: &types.Amount{
+								Amount: &Amount{
 									Value:    "1589351625",
 									Currency: MainnetCurrency,
 								},
-								CoinChange: &types.CoinChange{
-									CoinAction: types.CoinCreated,
-									CoinIdentifier: &types.CoinIdentifier{
+								CoinChange: &CoinChange{
+									CoinAction: CoinCreated,
+									CoinIdentifier: &CoinIdentifier{
 										Identifier: "8c14f0db3df150123e6f3dbbf30f8b955a8249b62ac1d1ff16284aefa3d06d87:0",
 									},
 								},
@@ -966,16 +966,16 @@ func TestParseBlock(t *testing.T) {
 								}),
 							},
 							{
-								OperationIdentifier: &types.OperationIdentifier{
+								OperationIdentifier: &OperationIdentifier{
 									Index:        2,
 									NetworkIndex: int64Pointer(1),
 								},
 								Type:   OutputOpType,
-								Status: types.String(SuccessStatus),
-								Account: &types.AccountIdentifier{
+								Status: String(SuccessStatus),
+								Account: &AccountIdentifier{
 									Address: "6a24aa21a9ed10109f4b82aa3ed7ec9d02a2a90246478b3308c8b85daf62fe501d58d05727a4",
 								},
-								Amount: &types.Amount{
+								Amount: &Amount{
 									Value:    "0",
 									Currency: MainnetCurrency,
 								},
@@ -996,27 +996,27 @@ func TestParseBlock(t *testing.T) {
 						}),
 					},
 					{
-						TransactionIdentifier: &types.TransactionIdentifier{
+						TransactionIdentifier: &TransactionIdentifier{
 							Hash: "fff2525b8931402dd09222c50775608f75787bd2b87e56995a7bdd30f79702c4",
 						},
-						Operations: []*types.Operation{
+						Operations: []*Operation{
 							{
-								OperationIdentifier: &types.OperationIdentifier{
+								OperationIdentifier: &OperationIdentifier{
 									Index:        0,
 									NetworkIndex: int64Pointer(0),
 								},
 								Type:   InputOpType,
-								Status: types.String(SuccessStatus),
-								Amount: &types.Amount{
+								Status: String(SuccessStatus),
+								Amount: &Amount{
 									Value:    "-5000000000",
 									Currency: MainnetCurrency,
 								},
-								Account: &types.AccountIdentifier{
+								Account: &AccountIdentifier{
 									Address: "1BNwxHGaFbeUBitpjy2AsKpJ29Ybxntqvb",
 								},
-								CoinChange: &types.CoinChange{
-									CoinAction: types.CoinSpent,
-									CoinIdentifier: &types.CoinIdentifier{
+								CoinChange: &CoinChange{
+									CoinAction: CoinSpent,
+									CoinIdentifier: &CoinIdentifier{
 										Identifier: "87a157f3fd88ac7907c05fc55e271dc4acdc5605d187d646604ca8c0e9382e03:0",
 									},
 								},
@@ -1029,22 +1029,22 @@ func TestParseBlock(t *testing.T) {
 								}),
 							},
 							{
-								OperationIdentifier: &types.OperationIdentifier{
+								OperationIdentifier: &OperationIdentifier{
 									Index:        1,
 									NetworkIndex: int64Pointer(0),
 								},
 								Type:   OutputOpType,
-								Status: types.String(SuccessStatus),
-								Account: &types.AccountIdentifier{
+								Status: String(SuccessStatus),
+								Account: &AccountIdentifier{
 									Address: "1JqDybm2nWTENrHvMyafbSXXtTk5Uv5QAn",
 								},
-								Amount: &types.Amount{
+								Amount: &Amount{
 									Value:    "556000000",
 									Currency: MainnetCurrency,
 								},
-								CoinChange: &types.CoinChange{
-									CoinAction: types.CoinCreated,
-									CoinIdentifier: &types.CoinIdentifier{
+								CoinChange: &CoinChange{
+									CoinAction: CoinCreated,
+									CoinIdentifier: &CoinIdentifier{
 										Identifier: "fff2525b8931402dd09222c50775608f75787bd2b87e56995a7bdd30f79702c4:0",
 									},
 								},
@@ -1061,22 +1061,22 @@ func TestParseBlock(t *testing.T) {
 								}),
 							},
 							{
-								OperationIdentifier: &types.OperationIdentifier{
+								OperationIdentifier: &OperationIdentifier{
 									Index:        2,
 									NetworkIndex: int64Pointer(1),
 								},
 								Type:   OutputOpType,
-								Status: types.String(SuccessStatus),
-								Account: &types.AccountIdentifier{
+								Status: String(SuccessStatus),
+								Account: &AccountIdentifier{
 									Address: "1EYTGtG4LnFfiMvjJdsU7GMGCQvsRSjYhx",
 								},
-								Amount: &types.Amount{
+								Amount: &Amount{
 									Value:    "4444000000",
 									Currency: MainnetCurrency,
 								},
-								CoinChange: &types.CoinChange{
-									CoinAction: types.CoinCreated,
-									CoinIdentifier: &types.CoinIdentifier{
+								CoinChange: &CoinChange{
+									CoinAction: CoinCreated,
+									CoinIdentifier: &CoinIdentifier{
 										Identifier: "fff2525b8931402dd09222c50775608f75787bd2b87e56995a7bdd30f79702c4:1",
 									},
 								},
@@ -1101,27 +1101,27 @@ func TestParseBlock(t *testing.T) {
 						}),
 					},
 					{
-						TransactionIdentifier: &types.TransactionIdentifier{
+						TransactionIdentifier: &TransactionIdentifier{
 							Hash: "fake",
 						},
-						Operations: []*types.Operation{
+						Operations: []*Operation{
 							{
-								OperationIdentifier: &types.OperationIdentifier{
+								OperationIdentifier: &OperationIdentifier{
 									Index:        0,
 									NetworkIndex: int64Pointer(0),
 								},
 								Type:   InputOpType,
-								Status: types.String(SuccessStatus),
-								Amount: &types.Amount{
+								Status: String(SuccessStatus),
+								Amount: &Amount{
 									Value:    "-3467607",
 									Currency: MainnetCurrency,
 								},
-								Account: &types.AccountIdentifier{
+								Account: &AccountIdentifier{
 									Address: "3FfQGY7jqsADC7uTVqF3vKQzeNPiBPTqt4",
 								},
-								CoinChange: &types.CoinChange{
-									CoinAction: types.CoinSpent,
-									CoinIdentifier: &types.CoinIdentifier{
+								CoinChange: &CoinChange{
+									CoinAction: CoinSpent,
+									CoinIdentifier: &CoinIdentifier{
 										Identifier: "503e4e9824282eb06f1a328484e2b367b5f4f93a405d6e7b97261bafabfb53d5:0",
 									},
 								},
@@ -1138,22 +1138,22 @@ func TestParseBlock(t *testing.T) {
 								}),
 							},
 							{
-								OperationIdentifier: &types.OperationIdentifier{
+								OperationIdentifier: &OperationIdentifier{
 									Index:        1,
 									NetworkIndex: int64Pointer(1),
 								},
 								Type:   InputOpType,
-								Status: types.String(SuccessStatus),
-								Amount: &types.Amount{
+								Status: String(SuccessStatus),
+								Amount: &Amount{
 									Value:    "0",
 									Currency: MainnetCurrency,
 								},
-								Account: &types.AccountIdentifier{
+								Account: &AccountIdentifier{
 									Address: "1NdvAyRJLdK5EXs7DV3ebYb5wffdCZk1pD",
 								},
-								CoinChange: &types.CoinChange{
-									CoinAction: types.CoinSpent,
-									CoinIdentifier: &types.CoinIdentifier{
+								CoinChange: &CoinChange{
+									CoinAction: CoinSpent,
+									CoinIdentifier: &CoinIdentifier{
 										Identifier: "503e4e9824282eb06f1a328484e2b367b5f4f93a405d6e7b97261bafabfb53d5:1",
 									},
 								},
@@ -1166,22 +1166,22 @@ func TestParseBlock(t *testing.T) {
 								}),
 							},
 							{
-								OperationIdentifier: &types.OperationIdentifier{
+								OperationIdentifier: &OperationIdentifier{
 									Index:        2,
 									NetworkIndex: int64Pointer(2),
 								},
 								Type:   InputOpType,
-								Status: types.String(SuccessStatus),
-								Amount: &types.Amount{
+								Status: String(SuccessStatus),
+								Amount: &Amount{
 									Value:    "-556000000",
 									Currency: MainnetCurrency,
 								},
-								Account: &types.AccountIdentifier{
+								Account: &AccountIdentifier{
 									Address: "1JqDybm2nWTENrHvMyafbSXXtTk5Uv5QAn",
 								},
-								CoinChange: &types.CoinChange{
-									CoinAction: types.CoinSpent,
-									CoinIdentifier: &types.CoinIdentifier{
+								CoinChange: &CoinChange{
+									CoinAction: CoinSpent,
+									CoinIdentifier: &CoinIdentifier{
 										Identifier: "fff2525b8931402dd09222c50775608f75787bd2b87e56995a7bdd30f79702c4:0",
 									},
 								},
@@ -1194,22 +1194,22 @@ func TestParseBlock(t *testing.T) {
 								}),
 							},
 							{
-								OperationIdentifier: &types.OperationIdentifier{
+								OperationIdentifier: &OperationIdentifier{
 									Index:        3,
 									NetworkIndex: int64Pointer(0),
 								},
 								Type:   OutputOpType,
-								Status: types.String(SuccessStatus),
-								Account: &types.AccountIdentifier{
+								Status: String(SuccessStatus),
+								Account: &AccountIdentifier{
 									Address: "76a914c398efa9c392ba6013c5e04ee729755ef7f58b3288ac",
 								},
-								Amount: &types.Amount{
+								Amount: &Amount{
 									Value:    "20056000000",
 									Currency: MainnetCurrency,
 								},
-								CoinChange: &types.CoinChange{
-									CoinAction: types.CoinCreated,
-									CoinIdentifier: &types.CoinIdentifier{
+								CoinChange: &CoinChange{
+									CoinAction: CoinCreated,
+									CoinIdentifier: &CoinIdentifier{
 										Identifier: "fake:0",
 									},
 								},
@@ -1250,7 +1250,7 @@ func TestParseBlock(t *testing.T) {
 		},
 		"missing transactions": {
 			block:         block100000,
-			coins:         map[string]*types.AccountCoin{},
+			coins:         map[string]*AccountCoin{},
 			expectedError: errors.New("error finding previous tx"),
 		},
 	}

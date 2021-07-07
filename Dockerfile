@@ -20,23 +20,23 @@ RUN mkdir -p /app \
 WORKDIR /app
 
 # Source: https://github.com/ElectraProtocol/XEP-Core/blob/master/doc/build-unix.md#ubuntu--debian
-RUN apt-get update && apt-get install -y automake make gcc g++ autoconf autotools-dev libsqlite3-dev bsdmainutils build-essential git libboost-all-dev \
-  libcurl4-openssl-dev libdb++-dev libevent-dev libssl-dev libtool pkg-config python3 python-pip libzmq3-dev wget curl
+RUN apt-get update && apt-get install -y git make file autoconf automake build-base libtool db-c++ db-dev boost-system boost-program_options \
+  boost-filesystem boost-dev libressl-dev libevent-dev wget curl
 
 
-
-# VERSION: ElectraProtocol Core v1.0.2.0
+# VERSION: ElectraProtocol Core v1.0.3.0
 RUN git clone https://github.com/ElectraProtocol/XEP-Core \
   && cd XEP-Core \
-  && git checkout 96529bb6c289355f85064bddfeeccf1bd545495a
+  && git checkout 821291659f9741e6c2152725f82d5fc36becd832
 
 RUN cd XEP-Core \
-  && cd `pwd`/depends \
-  && make -j4 \
-  && cd .. \
   && ./autogen.sh \
-  && ./configure --prefix=`pwd`/depends/x86_64-pc-linux-gnu --disable-tests --without-miniupnpc --without-gui --with-incompatible-bdb --disable-hardening --disable-zmq --disable-bench --disable-wallet CXXFLAGS="--param ggc-min-expand=1 --param ggc-min-heapsize=32768" \
-  && make -j4
+  && ./configure --disable-tests \
+                 --disable-bench --disable-static  \
+                 --without-gui --disable-zmq \
+                 --with-incompatible-bdb \
+                 CFLAGS='-w' CXXFLAGS='-w' \
+  && make -j 4
 
 RUN mv XEP-Core/src/xepd /app/xepd \
   && rm -rf XEP-Core
