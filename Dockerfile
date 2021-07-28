@@ -21,12 +21,12 @@ WORKDIR /app
 
 # Source: https://github.com/ElectraProtocol/XEP-Core/blob/release-1.0/doc/build-unix.md#ubuntu--debian
 RUN apt-get update && apt-get install -y make gcc g++ autoconf autotools-dev bsdmainutils build-essential git libboost-all-dev \
-  libcurl4-openssl-dev libdb++-dev libevent-dev libssl-dev libtool pkg-config python python-pip libzmq3-dev wget
+  libcurl4-openssl-dev libdb++-dev libevent-dev libssl-dev libtool pkg-config python python-pip libzmq3-dev wget git
 
 # VERSION: XEP Core 1.0.3.0
 RUN git clone https://github.com/ElectraProtocol/XEP-Core \
   && cd XEP-Core \
-  && git checkout 7ff64311bee570874c4f0dfa18f518552188df08
+  && git checkout 821291659f9741e6c2152725f82d5fc36becd832
 
 RUN cd XEP-Core\
   && ./autogen.sh \
