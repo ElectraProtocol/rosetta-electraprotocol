@@ -61,8 +61,8 @@ const (
 	testnetTransactionDictionary = "/app/testnet-transaction.zstd"
 	mainnetTransactionDictionary = "/app/mainnet-transaction.zstd"
 
-	mainnetRPCPort = 16817
-	testnetRPCPort = 18317
+	mainnetRPCPort = 16816
+	testnetRPCPort = 18316
 
 	// min prune depth is 2160:
 	// https://github.com/ElectraProtocol/XEP-Core/blob/098b0a1e43f57cbc54c8efa558567152bef5c9f5/src/validation.h#L84

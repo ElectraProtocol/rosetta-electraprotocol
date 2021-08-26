@@ -43,7 +43,7 @@ Running the following commands will create a Docker image called `rosetta-electr
 #### From GitHub
 To download the pre-built Docker image from the latest release, run:
 ```text
-curl -sSfL https://raw.githubusercontent.com/coinbase/rosetta-electraprotocol/master/install.sh | sh -s
+curl -sSfL https://raw.githubusercontent.com/ElectraProtocol/rosetta-electraprotocol/master/install.sh | sh -s
 ```
 _Do not try to install rosetta-electraprotocol using GitHub Packages!_
 

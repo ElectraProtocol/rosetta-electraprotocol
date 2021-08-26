@@ -260,7 +260,7 @@ func (i *Indexer) waitForNode(ctx context.Context) error {
 			return nil
 		}
 
-		logger.Infow("waiting for bitcoind...")
+		logger.Infow("waiting for xepd...")
 		if err := sdkUtils.ContextSleep(ctx, nodeWaitSleep); err != nil {
 			return err
 		}
